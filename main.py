@@ -5,6 +5,8 @@ import json
 import io
 import matplotlib.pyplot as plt
 
+
+#Nawiazanie polaczenia z mongo
 def mongo_conn():
     try:
         conn = MongoClient(host='127.0.0.1', port=27017)
@@ -13,12 +15,14 @@ def mongo_conn():
     except Exception as e:
         print('Error, cannot connect to database')
 
+#Wgranie danych z pliku json -- poki co na sztywno testowa nazwa kolekcji, do zmiany pozniej
 def load_data_from_json(file_path):
     db = mongo_conn()
     with open(file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
         db.Wycieczki.Test_insert.insert_many(data)
 
+#wgranie zdjecia do kolekcji
 def insert_image(file_name, file_path):
     db = mongo_conn()
     try:
@@ -43,12 +47,14 @@ def insert_image(file_name, file_path):
 #     else:
 #         print("No images found in the database.")
 
+#wyswietlenei nazw dostepnych wycieczek
 def display_trips_names():
     db = mongo_conn()
     wycieczki = db.Wycieczki.zagraniczne.find()
     for wycieczka in wycieczki:
         print(wycieczka['name'])
 
+#Wyswietlenie zdjecia
 def display_image(image_id):
     db = mongo_conn()
     fs = gridfs.GridFS(db.zdjecia)
@@ -59,6 +65,7 @@ def display_image(image_id):
     else:
         print(f"Image with id '{image_id}' not found in the database.")
 
+#Wyswietlenie zdjec z danej wycieczki
 def display_images_of_trip(trip_name):
     db = mongo_conn()
     trip = db.Wycieczki.zagraniczne.find_one({'name': trip_name})

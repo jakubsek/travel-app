@@ -52,8 +52,29 @@ def add_city(tx, city, country, latitude, longitude):
     else:
         print(f"Miasto {city}, {country} już istnieje w bazie danych.")
         
+def add_country(tx, country, currency, code):
+    result = tx.run("MATCH (c:Country {name: $name, currency: $currency, code: $code}) RETURN c", 
+                    name=country, currency=currency, code=code)
+    if result.single() is None:
+        tx.run("CREATE (c:Country {name: $name, currency: $currency, code: $code})", 
+                name=country, currency=currency, code=code)
+        print(f"Dodano państwo: {country}, {country}")
+    else:
+        print(f"Państwo {country} już istnieje w bazie danych.")
+        
+def add_city_to_country_relationship(tx):
+    tx.run("MATCH (c:City), (cc:Country {code: c.country}) "
+           "MERGE (c)-[:IN]->(cc)")
+    print("Dodano relacje między miastami a krajami.")
+    
+    
+def add_relations():
+    with Neo4jConnector() as db_connector:
+        with db_connector.session() as session:
+            session.write_transaction(add_city_to_country_relationship)
+            
 def import_cities_from_file():
-    with open("cities5000.txt", "r", encoding="utf-8") as file:
+    with open("cities15000.txt", "r", encoding="utf-8") as file:
         for line in file:
             if line.startswith("#"):
                 continue
@@ -62,7 +83,23 @@ def import_cities_from_file():
             country = data[8]
             latitude = float(data[4])
             longitude = float(data[5])
-            print(city, country, latitude, longitude)
+            population = int(data[14])
+            if population > 50000:
+                print(city, country, latitude, longitude)
+                with Neo4jConnector() as db_connector:
+                    with db_connector.session() as session:
+                        session.write_transaction(add_city, city, country, latitude, longitude)
+                    
+def import_country_from_file():
+    with open("countryinfo.txt", "r", encoding="utf-8") as file:
+        for line in file:
+            if line.startswith("#"):
+                continue
+            data = line.split("\t")
+            code = data[0]
+            name = data[4]
+            currency = data[10]
+            print(code, name, currency)
             with Neo4jConnector() as db_connector:
                 with db_connector.session() as session:
-                    session.write_transaction(add_city, city, country, latitude, longitude)
+                    session.write_transaction(add_country, name, currency, code)

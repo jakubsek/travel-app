@@ -1,4 +1,5 @@
 from neo4j import GraphDatabase
+from pymongo import MongoClient
 
 class Neo4jConnector:
     _uri = "bolt://127.0.0.1:7687"
@@ -25,3 +26,30 @@ class Neo4jConnector:
 
     def session(self):
         return self._driver.session()
+    
+
+class MongoDBConnector:
+    def __init__(self, host, port, db_name):
+        self.host = host
+        self.port = port
+        self.db_name = db_name
+        self.client = None
+        self.db = None
+
+    def connect(self):
+        self.client = MongoClient(self.host, self.port)
+        if self.db_name:
+            self.db = self.client[self.db_name]
+        else:
+            raise ValueError("Nazwa bazy danych nie została podana.")
+
+    def close(self):
+        if self.client:
+            self.client.close()
+            self.client = None
+            self.db = None
+
+    def session(self):
+        if not self.client:
+            raise ValueError("Brak aktywnego połączenia z bazą danych.")
+        return self.client

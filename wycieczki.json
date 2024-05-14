@@ -1,0 +1,37 @@
+[
+  {
+
+    "type_of_vacation": "Nad morzem",
+    "name": "Wakacje nad morzem",
+    "city": "Barcelona",
+    "description": "Niesamowite wakacje nad Morzem Śródziemnym!",
+    "price": 1500,
+    "available_seats": 10,
+    "start_date": {"$date": "2024-07-01T00:00:00Z"},
+    "end_date": {"$date": "2024-07-10T00:00:00Z"},
+    "tour_operator": "Travel Experts",
+    "images": [
+      {"$oid": "663e6b788955a6a196e8e74e"},
+      {"$oid": "663e85b80ea15d80f8bc14ef"}
+    ]
+
+    
+  },
+  {
+    "type_of_vacation": "W górach",
+    "name": "Wakacje w górach",
+    "city": "Chamonix",
+    "description": "Przygoda w górach!",
+    "price": 2000,
+    "available_seats": 8,
+    "start_date": {"$date": "2024-08-15T00:00:00Z"},
+    "end_date": {"$date": "2024-08-25T00:00:00Z"},
+    "tour_operator": "Mountain Adventures",
+    "images": [
+      {"$oid": "663e84d2272f027acf1c6e96"},
+      {"$oid": "663e858f5d65dd34ca02c7f5"}
+    ]
+      
+    
+  }
+]

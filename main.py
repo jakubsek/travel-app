@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+kfrom pymongo import MongoClient
 import gridfs
 from PIL import Image
 import json
@@ -28,7 +28,7 @@ def insert_image(file_name, file_path):
     try:
         with open(file_path, "rb") as file_data:
             data = file_data.read()
-            fs = gridfs.GridFS(db.zdjecia)
+            fs = gridfs.GridFS(db.Wycieczki)
             fs.put(data, filename=file_name)
             print("Image inserted successfully.")
     except FileNotFoundError:

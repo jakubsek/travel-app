@@ -1,4 +1,10 @@
 from db_connection import Neo4jConnector
+from pymongo import MongoClient
+import gridfs
+from PIL import Image
+import json
+import io
+import matplotlib.pyplot as plt
 
 db_connector = Neo4jConnector("bolt://localhost:7687", "neo4j", "neo4jgraph")
 db_connector.connect()
@@ -43,13 +49,6 @@ print(login_user("jan_kowalski", "haslo123"))
 print(login_user("jan_kowalski", "haslo456")) 
 
 db_connector.close()
-kfrom pymongo import MongoClient
-import gridfs
-from PIL import Image
-import json
-import io
-import matplotlib.pyplot as plt
-
 
 #Nawiazanie polaczenia z mongo
 def mongo_conn():

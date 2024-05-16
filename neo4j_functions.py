@@ -103,3 +103,17 @@ def import_country_from_file():
             with Neo4jConnector() as db_connector:
                 with db_connector.session() as session:
                     session.write_transaction(add_country, name, currency, code)
+                    
+def get_countries():
+    with Neo4jConnector() as db_connector:
+            with db_connector.session() as session:
+                countries = session.run("MATCH (c:Country)<-[:IN]-(city:City) WITH c, COUNT(city) AS cityCount WHERE cityCount >= 5 RETURN c.name AS country")
+                countries_list = list(map(lambda country: country['country'],countries.data()))
+                return countries_list
+            
+def get_cities_in(country):
+    with Neo4jConnector() as db_connector:
+            with db_connector.session() as session:
+                cities = session.run(f"MATCH (c:City)-[r:IN]->(cn:Country) WHERE cn.name = '{country}' RETURN c.name as city")
+                cities_list = list(map(lambda country: country['city'],cities.data()))
+                return cities_list
